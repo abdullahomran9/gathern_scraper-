@@ -28,6 +28,7 @@ def on_fetch():
     params = {
         'prices[]': '0-4000+',
         'chalet_cats[]': 6,
+        'chalet_cats[]': 9,
         'city': 3,
         'total_rooms': total_rooms,
         'total_single_beds': total_single_beds,
