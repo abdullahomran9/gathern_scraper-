@@ -6,7 +6,7 @@ from tkinter import ttk, scrolledtext, filedialog, messagebox
 from bs4 import BeautifulSoup
 import json
 from datetime import datetime
-
+import threading
 
 def load_csv():
     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
