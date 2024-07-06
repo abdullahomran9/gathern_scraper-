@@ -18,7 +18,7 @@
 
     - شغل البرنامج باستخدام Python:
     ```bash
-    python fetch_url.py
+    python propertyCrawler.py
     ```
 
     
@@ -57,7 +57,7 @@
 
     - شغل البرنامج باستخدام Python:
     ```bash
-    python check_urls.py
+    python availablityCrewler.py
     ```
 
 3. **طريقة الاستخدام:**
