@@ -8,7 +8,6 @@ import json
 from datetime import datetime
 
 
-
 def load_csv():
     file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
     if file_path:
@@ -34,6 +33,7 @@ def construct_and_check_urls():
         return
 
     results = []
+    text_area.delete(1.0, tk.END)  # Clear the text area at the start
     for index, row in loaded_df.iterrows():
         chalet_id = row['chalet_id']  # Assuming chalet_id is a column in the CSV
         unit_id = row['id']  # Assuming id is a column in the CSV
@@ -46,13 +46,18 @@ def construct_and_check_urls():
             print(f"Unexpected response for URL {url}: {response}")
             is_available = 'N/A'
         results.append({'chalet_id': chalet_id, 'unit_id': unit_id, 'isUnitAvailable': is_available})
+
+        # Update progress in the text area after every 10 URLs
+        if (index + 1) % 10 == 0:
+            text_area.insert(tk.END, f"Processed {index + 1} URLs...\n")
+            text_area.see(tk.END)  # Scroll to the end
+
         time.sleep(3)  # Wait for 3 seconds between requests
 
     result_df = pd.DataFrame(results)
     date_str = datetime.now().strftime('%Y-%m-%d')
     result_filename = f'unit_availability_{date_str}.csv'
     result_df.to_csv(result_filename, index=False, encoding='utf-8-sig')
-    text_area.delete(1.0, tk.END)
     text_area.insert(tk.END, f"Results saved to {result_filename}.\n{result_df}")
 
 def fetch_url(url):
@@ -75,6 +80,9 @@ def fetch_url(url):
     except Exception as e:
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
+
+def start_url_check():
+    threading.Thread(target=construct_and_check_urls).start()
 
 # Create the main window
 root = tk.Tk()
@@ -101,7 +109,7 @@ check_out_entry = ttk.Entry(root)
 check_out_entry.grid(column=1, row=3, padx=10, pady=5)
 
 # Create and place the button to construct URLs and check availability
-construct_check_button = ttk.Button(root, text="Construct and Check URLs", command=construct_and_check_urls)
+construct_check_button = ttk.Button(root, text="Construct and Check URLs", command=start_url_check)
 construct_check_button.grid(column=0, row=4, columnspan=2, padx=10, pady=10)
 
 # Create and place the text area to display the results
